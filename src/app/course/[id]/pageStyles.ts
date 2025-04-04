@@ -35,7 +35,7 @@ export const FavoriteIconContainer = styled.div`
   position: relative;
 `;
 
-export const VideoContainer = styled.div<{ purchased: boolean }>`
+export const VideoContainer = styled.div<{ $purchased: boolean }>`
   width: 80%;
   max-width: 800px;
   margin: ${({ $purchased }) => ($purchased ? "0 auto" : "0")};

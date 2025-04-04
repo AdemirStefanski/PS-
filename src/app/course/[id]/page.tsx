@@ -23,40 +23,47 @@ import {
 } from "./pageStyles";
 import { FiHeart } from "react-icons/fi";
 import { AiFillHeart } from "react-icons/ai";
-import courses from "../../../data/cursos.json";
-import user from "../../../data/user.json";
+import coursesData from "../../../data/cursos.json";
+import userData from "../../../data/user.json";
 import { useFavorites } from "../../../Context/FavoritesContext";
 import Image from "next/image";
+import { Course, User } from "../../../types";
 
-// Função para converter data de AAAA-MM-DD para DD/MM/AAAA
+// Converter data de AAAA-MM-DD para DD/MM/AAAA
 const formatDate = (dateStr: string): string => {
   const [year, month, day] = dateStr.split("-");
   return `${day}/${month}/${year}`;
 };
 
-// Função para extrair o videoId de um link do YouTube
+// Extrair o videoId de um link do YouTube
 const getYouTubeVideoId = (url: string): string | null => {
   const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
   const match = url.match(regExp);
   return match && match[7].length === 11 ? match[7] : null;
 };
 
-const CoursePage = () => {
+const CoursePage: React.FC = () => {
   const { id } = useParams();
   const courseId = Number(id);
 
-  const course = courses.find((c: any) => c.id === courseId);
-  if (!course) return <div>Curso não encontrado</div>;
-
-  // Verifica se o curso foi adquirido pelo usuário
-  const purchased = user.courses.find((c: any) => c.courseId === courseId);
-  const isPurchased = Boolean(purchased);
-  const acquiredDate = purchased ? formatDate(purchased.dateJoined) : "";
-
+  // Chamada dos hooks antes de qualquer verificação condicional
   const videoRef = useRef<YouTubePlayer | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(50);
   const [playbackRate, setPlaybackRate] = useState(1);
+  const { favorites, toggleFavorite } = useFavorites();
+
+  // Tipando os dados importados
+  const courses = coursesData as Course[];
+  const user = userData as User;
+
+  const course = courses.find((c: Course) => c.id === courseId);
+  if (!course) return <div>Curso não encontrado</div>;
+
+  // Verifica se o curso foi adquirido pelo usuário
+  const purchasedEntry = user.courses.find((c) => c.courseId === courseId);
+  const isPurchased = Boolean(purchasedEntry);
+  const acquiredDate = purchasedEntry ? formatDate(purchasedEntry.dateJoined) : "";
 
   const opts: YouTubeProps["opts"] = {
     width: "100%",
@@ -112,7 +119,6 @@ const CoursePage = () => {
     }
   };
 
-  const { favorites, toggleFavorite } = useFavorites();
   const isFavorited = favorites.includes(course.id);
   const videoId = getYouTubeVideoId(course.link_curso || "");
 
@@ -130,37 +136,42 @@ const CoursePage = () => {
         </FavoriteIconContainer>
       </HeaderSection>
 
-      {/* O VideoContainer utiliza a transient prop $purchased para definir o alinhamento */}
       <VideoContainer $purchased={isPurchased}>
         {isPurchased && videoId ? (
           <ResponsiveYouTubeWrapper>
             <YouTube videoId={videoId} opts={opts} onReady={handleVideoReady} />
           </ResponsiveYouTubeWrapper>
         ) : (
-          // Se o curso não foi comprado, o contêiner do vídeo não é exibido
+          // Se não foi comprado, não exibe o vídeo (display none)
           <ResponsiveYouTubeWrapper style={{ display: "none" }} />
         )}
+
         <DescripContainer>
-          {/* Toda a seção de informações será alinhada à esquerda */}
           <div style={{ textAlign: "left", marginTop: "16px" }}>
             <DescriptionText style={{ fontSize: isPurchased ? "1rem" : "1.2rem" }}>
               {course.description}
             </DescriptionText>
-            {!isPurchased && (
+            {!isPurchased ? (
               <>
-                {/* Linha 1: Criado em */}
-                <div style={{ display: "flex", alignItems: "center", marginTop: "8px" }}>
+                {/* Linha 1: "Criado em:" com data */}
+                <div style={{ marginTop: "8px" }}>
                   <InfoLabel>Criado em: </InfoLabel>
                   <span>{formatDate(course.created_at)}</span>
                 </div>
-                {/* Linha 2: Preço à esquerda e botão à direita */}
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "14px" }}>
+                {/* Linha 2: Preço à esquerda e botão "Adquirir Curso" à direita */}
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    marginTop: "14px",
+                  }}
+                >
                   <PriceText>{`R$ ${Math.floor(course.price)},00`}</PriceText>
                   <PurchaseButton>Adquirir Curso</PurchaseButton>
                 </div>
               </>
-            )}
-            {isPurchased && (
+            ) : (
               <InfoRow>
                 <div>
                   <InfoLabel>Criado em: </InfoLabel>
@@ -185,11 +196,9 @@ const CoursePage = () => {
               <Image src="/videocontrols/play.png" alt="Play" width={24} height={24} />
             )}
           </ControlButton>
-
           <ControlButton onClick={handleRestart}>
             <Image src="/videocontrols/restartVideo.png" alt="Reiniciar Vídeo" width={24} height={24} />
           </ControlButton>
-
           <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
             <Image src="/videocontrols/sound.png" alt="Volume" width={24} height={24} />
             <VolumeSlider
@@ -201,11 +210,9 @@ const CoursePage = () => {
               onChange={handleVolumeChange}
             />
           </div>
-
           <ControlButton onClick={() => changeSpeed(-0.25)}>
             <Image src="/videocontrols/speedDown.png" alt="Diminuir Velocidade" width={24} height={24} />
           </ControlButton>
-
           <ControlButton onClick={() => changeSpeed(0.25)}>
             <Image src="/videocontrols/speedUp.png" alt="Aumentar Velocidade" width={24} height={24} />
           </ControlButton>
