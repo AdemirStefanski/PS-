@@ -6,7 +6,7 @@ export interface Theme {
 
 export const lightTheme = {
   lightThemeText: "#013354",
-  ,
+  background: "#ffffff",
   
 };
 

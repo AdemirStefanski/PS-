@@ -29,7 +29,7 @@ import { useFavorites } from "../../../Context/FavoritesContext";
 import Image from "next/image";
 
 // Função para converter data de AAAA-MM-DD para DD/MM/AAAA
-const formatDate = (dateStr: string) => {
+const formatDate = (dateStr: string): string => {
   const [year, month, day] = dateStr.split("-");
   return `${day}/${month}/${year}`;
 };
@@ -55,7 +55,7 @@ const CoursePage = () => {
 
   const videoRef = useRef<YouTubePlayer | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [volume, setVolume] = useState(50); 
+  const [volume, setVolume] = useState(50);
   const [playbackRate, setPlaybackRate] = useState(1);
 
   const opts: YouTubeProps["opts"] = {
@@ -64,8 +64,8 @@ const CoursePage = () => {
     playerVars: {
       autoplay: 0,
       modestbranding: 1,
-      controls: 0, 
-      rel: 0, 
+      controls: 0,
+      rel: 0,
       showinfo: 0,
     },
   };
@@ -114,7 +114,6 @@ const CoursePage = () => {
 
   const { favorites, toggleFavorite } = useFavorites();
   const isFavorited = favorites.includes(course.id);
-
   const videoId = getYouTubeVideoId(course.link_curso || "");
 
   return (
@@ -131,88 +130,68 @@ const CoursePage = () => {
         </FavoriteIconContainer>
       </HeaderSection>
 
+      {/* O VideoContainer utiliza a transient prop $purchased para definir o alinhamento */}
       <VideoContainer $purchased={isPurchased}>
         {isPurchased && videoId ? (
-          <ResponsiveYouTubeWrapper >
+          <ResponsiveYouTubeWrapper>
             <YouTube videoId={videoId} opts={opts} onReady={handleVideoReady} />
           </ResponsiveYouTubeWrapper>
         ) : (
-          <ResponsiveYouTubeWrapper style={{ display: isPurchased ? "block" : "none" }}>
-          </ResponsiveYouTubeWrapper>
+          // Se o curso não foi comprado, o contêiner do vídeo não é exibido
+          <ResponsiveYouTubeWrapper style={{ display: "none" }} />
         )}
         <DescripContainer>
+          {/* Toda a seção de informações será alinhada à esquerda */}
           <div style={{ textAlign: "left", marginTop: "16px" }}>
-            
-              <DescriptionText style={{ fontSize: isPurchased ? "1rem" : "1.2rem" }}>
-                {course.description}
-              </DescriptionText>
-              {!isPurchased && (
-                <>
-                  <div style={{ display: "flex", alignItems: "center", marginTop: "8px" }}>
-                    <InfoLabel>Criado em:</InfoLabel>
-                    <span>{formatDate(course.created_at)}</span>
-                  </div>
-
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "14px" }}>
-                    <PriceText>{`R$ ${Math.floor(course.price)},00`}</PriceText>
-                    <PurchaseButton>Adquirir Curso</PurchaseButton>
-                  </div>
-                </>
+            <DescriptionText style={{ fontSize: isPurchased ? "1rem" : "1.2rem" }}>
+              {course.description}
+            </DescriptionText>
+            {!isPurchased && (
+              <>
+                {/* Linha 1: Criado em */}
+                <div style={{ display: "flex", alignItems: "center", marginTop: "8px" }}>
+                  <InfoLabel>Criado em: </InfoLabel>
+                  <span>{formatDate(course.created_at)}</span>
+                </div>
+                {/* Linha 2: Preço à esquerda e botão à direita */}
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "14px" }}>
+                  <PriceText>{`R$ ${Math.floor(course.price)},00`}</PriceText>
+                  <PurchaseButton>Adquirir Curso</PurchaseButton>
+                </div>
+              </>
             )}
             {isPurchased && (
               <InfoRow>
                 <div>
-                  <InfoLabel>Criado em:</InfoLabel>
+                  <InfoLabel>Criado em: </InfoLabel>
                   <span>{formatDate(course.created_at)}</span>
                 </div>
                 <div>
-                  <InfoLabel>Adquirido em:</InfoLabel>
+                  <InfoLabel>Adquirido em: </InfoLabel>
                   <span>{acquiredDate}</span>
                 </div>
               </InfoRow>
             )}
-            
           </div>
-        </DescripContainer>  
+        </DescripContainer>
       </VideoContainer>
 
       {isPurchased && (
         <ControlsContainer>
-
           <ControlButton onClick={handlePlayPause}>
             {isPlaying ? (
-              <Image
-                src="/videocontrols/pause.png"
-                alt="Pause"
-                width={24}
-                height={24}
-              />
+              <Image src="/videocontrols/pause.png" alt="Pause" width={24} height={24} />
             ) : (
-              <Image
-                src="/videocontrols/play.png"
-                alt="Play"
-                width={24}
-                height={24}
-              />
+              <Image src="/videocontrols/play.png" alt="Play" width={24} height={24} />
             )}
           </ControlButton>
 
           <ControlButton onClick={handleRestart}>
-            <Image
-              src="/videocontrols/restartVideo.png"
-              alt="Reiniciar Vídeo"
-              width={24}
-              height={24}
-            />
+            <Image src="/videocontrols/restartVideo.png" alt="Reiniciar Vídeo" width={24} height={24} />
           </ControlButton>
 
           <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-            <Image
-              src="/videocontrols/sound.png"
-              alt="Volume"
-              width={24}
-              height={24}
-            />
+            <Image src="/videocontrols/sound.png" alt="Volume" width={24} height={24} />
             <VolumeSlider
               type="range"
               min="0"
@@ -224,21 +203,11 @@ const CoursePage = () => {
           </div>
 
           <ControlButton onClick={() => changeSpeed(-0.25)}>
-            <Image
-              src="/videocontrols/speedDown.png"
-              alt="Diminuir Velocidade"
-              width={24}
-              height={24}
-            />
+            <Image src="/videocontrols/speedDown.png" alt="Diminuir Velocidade" width={24} height={24} />
           </ControlButton>
 
           <ControlButton onClick={() => changeSpeed(0.25)}>
-            <Image
-              src="/videocontrols/speedUp.png"
-              alt="Aumentar Velocidade"
-              width={24}
-              height={24}
-            />
+            <Image src="/videocontrols/speedUp.png" alt="Aumentar Velocidade" width={24} height={24} />
           </ControlButton>
         </ControlsContainer>
       )}
