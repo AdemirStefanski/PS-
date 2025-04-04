@@ -21,8 +21,9 @@ const CardsContainer = styled.div`
 
 export default function Home() {
   const { favoritesFilter, favorites } = useFavorites();
-  const searchQuery = useSearchParams()?.get("search")?.toLowerCase() || "";
-  const mineFilter = searchParams.get("mine") === "true";
+  const searchParams = useSearchParams();
+  const searchQuery = searchParams?.get("search")?.toLowerCase() || "";
+  const mineFilter = searchParams?.get("mine") === "true";
 
   const courses: Course[] = coursesData;
   const user: User = userData;
