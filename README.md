@@ -1,36 +1,94 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Grupo Permaneo
 
-## Getting Started
+Teste técnico front-end **Grupo Permaneo**. 
 
-First, run the development server:
+Disponível em: [https://ps-academy.vercel.app/](https://ps-academy.vercel.app/)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Desenvolvido utilizando **React**, **TypeScript** e **Next.js**. Testes implementados utilizando **Jest** e **React Testing Library** para garantir a qualidade e robustez dos principais componentes.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📖 Sobre
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Site de cursos que simula um usuário já logado que comprou 3 dos 10 cursos disponíveis
+- Funcionalidade de favoritar e pesquisar cursos
+- Layout responsivo para desktop e mobile
 
-## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+## 🛠️ Tecnologias & Dependências
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **React**: ^19.0.0
+- **React-DOM**: ^19.0.0
+- **React-icons**: ^5.5.0
+- **React-youtube**: ^10.1.0
+- **TypeScript**: ^5  
+- **Next.js**: ^15.2.4
+- **Jest**: ^29.7.0
+- **Styled-Components**: ^6.1.16
+- **@babel/runtime**: ^7.27.0
+- **Framer-motion**: ^12.6.3
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Outras dependências:
+- **@testing-library/dom**: ^10.4.0
+- **@testing-library/jest-dom**: ^6.6.3
+- **@testing-library/react**: ^16.3.0
+- **babel-jest**: ^29.7.0
+- **eslint**: ^9
 
-## Deploy on Vercel
+Consulte o arquivo [package.json](./package.json) para mais detalhes outras dependências.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🔧 Requisitos
+
+- [Next.js](https://nextjs.org/)
+- [npm](https://www.npmjs.com/) ou [yarn](https://yarnpkg.com/)
+- [Git](https://git-scm.com/)
+
+
+## 🚀 Rodando a Aplicação
+
+1. **Clone o repositório**:
+
+   ```bash
+   git clone https://github.com/AdemirStefanski/ps-academy.git
+
+2. **Navegue até a pasta do projeto**:
+
+   ```bash
+   cd ps-academy
+
+3. **Instale as dependências**:
+
+   ```bash
+   # npm
+   npm install
+
+    ou
+   
+   # yarn
+   yarn install
+
+4. **Inicie a aplicação**:
+
+   ```bash
+   # npm
+   npm start
+
+    ou
+   
+   # yarn
+   yarn start
+
+## 🐱‍👤 Rodando Teste
+
+Os testes estão localizados na pasta `__tests__` na raiz do projeto e utilizam Jest e React Testing Library para validar os principais componentes.
+
+1. **Execute o teste**:
+
+   ```bash
+   npm run test
+
+## 📚 Considerações Finais
+
+- Verifique se todas as dependências foram instaladas corretamente e se o ambiente (Node.js, npm/Yarn e Git) está devidamente configurado.
+- Para mais detalhes sobre as versões utilizadas, consulte o arquivo [package.json](./package.json).
+
