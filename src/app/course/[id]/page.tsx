@@ -29,13 +29,12 @@ import { useFavorites } from "../../../Context/FavoritesContext";
 import Image from "next/image";
 import { Course, User } from "../../../types";
 
-// Converter data de AAAA-MM-DD para DD/MM/AAAA
 const formatDate = (dateStr: string): string => {
   const [year, month, day] = dateStr.split("-");
   return `${day}/${month}/${year}`;
 };
 
-// Extrair o videoId de um link do YouTube
+
 const getYouTubeVideoId = (url: string): string | null => {
   const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
   const match = url.match(regExp);
@@ -43,17 +42,15 @@ const getYouTubeVideoId = (url: string): string | null => {
 };
 
 const CoursePage: React.FC = () => {
-  const { id } = useParams();
+  const { id } = useParams() as { id: string };
   const courseId = Number(id);
 
-  // Chamada dos hooks antes de qualquer verificação condicional
   const videoRef = useRef<YouTubePlayer | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(50);
   const [playbackRate, setPlaybackRate] = useState(1);
   const { favorites, toggleFavorite } = useFavorites();
 
-  // Tipando os dados importados
   const courses = coursesData as Course[];
   const user = userData as User;
 
@@ -153,12 +150,11 @@ const CoursePage: React.FC = () => {
             </DescriptionText>
             {!isPurchased ? (
               <>
-                {/* Linha 1: "Criado em:" com data */}
                 <div style={{ marginTop: "8px" }}>
                   <InfoLabel>Criado em: </InfoLabel>
                   <span>{formatDate(course.created_at)}</span>
                 </div>
-                {/* Linha 2: Preço à esquerda e botão "Adquirir Curso" à direita */}
+
                 <div
                   style={{
                     display: "flex",
