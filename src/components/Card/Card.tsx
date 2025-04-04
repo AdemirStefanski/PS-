@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
 import { FiHeart } from "react-icons/fi";      
 import { AiFillHeart } from "react-icons/ai";   

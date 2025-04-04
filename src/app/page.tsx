@@ -3,10 +3,11 @@
 import React from "react";
 import styled from "styled-components";
 import Card from "../components/Card/Card";
-import courses from "../data/cursos.json";
-import user from "../data/user.json";
+import coursesData from "../data/cursos.json";
+import userData from "../data/user.json";
 import { useFavorites } from "../Context/FavoritesContext";
 import { useSearchParams } from "next/navigation";
+import { Course, User } from "../types";
 
 const CardsContainer = styled.div`
   display: grid;
@@ -24,19 +25,22 @@ export default function Home() {
   const searchQuery = searchParams.get("search")?.toLowerCase() || "";
   const mineFilter = searchParams.get("mine") === "true";
 
+  const courses: Course[] = coursesData;
+  const user: User = userData;
+
   let filteredCourses = courses;
 
   if (mineFilter) {
-    filteredCourses = courses.filter((course: any) =>
-      user.courses.some((c: any) => c.courseId === course.id)
+    filteredCourses = courses.filter((course) =>
+      user.courses.some((c) => c.courseId === course.id)
     );
   } else if (favoritesFilter) {
-    filteredCourses = courses.filter((course: any) =>
+    filteredCourses = courses.filter((course) =>
       favorites.includes(course.id)
     );
   } else if (searchQuery) {
     filteredCourses = courses.filter(
-      (course: any) =>
+      (course) =>
         course.title.toLowerCase().includes(searchQuery) ||
         course.description.toLowerCase().includes(searchQuery)
     );
@@ -45,7 +49,7 @@ export default function Home() {
   return (
     <main>
       <CardsContainer>
-        {filteredCourses.map((course: any) => (
+        {filteredCourses.map((course) => (
           <Card key={course.id} course={course} user={user} />
         ))}
       </CardsContainer>
