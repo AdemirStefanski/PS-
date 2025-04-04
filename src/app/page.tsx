@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { Suspense } from "react";
 import styled from "styled-components";
 import Card from "../components/Card/Card";
 import coursesData from "../data/cursos.json";
@@ -19,7 +19,7 @@ const CardsContainer = styled.div`
   padding-top: 100px;
 `;
 
-export default function Home() {
+function HomeContent() {
   const { favoritesFilter, favorites } = useFavorites();
   const searchParams = useSearchParams();
   const searchQuery = searchParams?.get("search")?.toLowerCase() || "";
@@ -54,5 +54,13 @@ export default function Home() {
         ))}
       </CardsContainer>
     </main>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={null}>
+      <HomeContent />
+    </Suspense>
   );
 }
