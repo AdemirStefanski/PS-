@@ -17,6 +17,7 @@ const CardsContainer = styled.div`
   gap: 16px;
   padding: 16px;
   padding-top: 100px;
+  padding-bottom: 100px;
 `;
 
 function HomeContent() {
