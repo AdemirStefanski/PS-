@@ -89,6 +89,6 @@ Os testes estão localizados na pasta `__tests__` na raiz do projeto e utilizam 
 
 ## 📚 Considerações Finais
 
-- Verifique se todas as dependências foram instaladas corretamente e se o ambiente (Node.js, npm/Yarn e Git) está devidamente configurado.
+- Verifique se todas as dependências foram instaladas corretamente e se o ambiente (Next.js, npm/Yarn e Git) está devidamente configurado.
 - Para mais detalhes sobre as versões utilizadas, consulte o arquivo [package.json](./package.json).
 
