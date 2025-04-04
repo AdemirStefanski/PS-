@@ -51,8 +51,8 @@ export const Description = styled.p`
 
 export const ActionButton = styled.button<{ $isEnrolled: boolean }>`
   position: absolute;
-  bottom: 15px; /* 15px da parte inferior */
-  right: 15px;  /* 15px da lateral direita */
+  bottom: 15px; 
+  right: 15px;  
   padding: 8px 16px;
   border: none;
   background-color: ${({ $isEnrolled }) => ($isEnrolled ? "#9bba58" : "#013354")};

@@ -6,12 +6,12 @@ export interface Theme {
 
 export const lightTheme = {
   lightThemeText: "#013354",
-  background: "#ffffff",
+  ,
   
 };
 
 export const darkTheme = {
   text: "#ffffff",
-  background: "#171717",
+  
   
 };

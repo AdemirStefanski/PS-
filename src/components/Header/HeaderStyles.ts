@@ -1,4 +1,3 @@
-// HeaderStyles.ts
 import styled from "styled-components";
 
 export const HeaderContainer = styled.header`
@@ -10,7 +9,7 @@ export const HeaderContainer = styled.header`
   z-index: 1000;
   transition: box-shadow 0.3s ease;
   padding: 0.5rem 2rem;
-  color: #013354; /* Define a cor padrão do texto */
+  color: #013354; 
   
   &.scrolled {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -27,7 +26,7 @@ export const ContentWrapper = styled.div`
   gap: 1rem;
 
   @media (max-width: 600px) {
-    grid-template-columns: auto auto; /* Duas colunas: logo e mobile icon */
+    grid-template-columns: auto auto; 
   }
 `;
 
@@ -35,8 +34,8 @@ export const Logo = styled.div`
   display: flex;
   align-items: center;
   img {
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
     object-fit: contain;
   }
 `;
@@ -108,7 +107,7 @@ export const ActionsContainer = styled.div`
   }
 `;
 
-/* Ícone para abrir/fechar o menu mobile */
+
 export const MobileIcon = styled.div`
   display: flex;
   align-items: center;
@@ -117,7 +116,7 @@ export const MobileIcon = styled.div`
   justify-self: end;
 `;
 
-/* Menu mobile drop-down */
+
 export const MobileMenu = styled.div`
   position: absolute;
   
@@ -134,7 +133,7 @@ export const MobileMenu = styled.div`
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 `;
 
-/* Cada item do menu mobile */
+
 export const MobileMenuItem = styled.div`
 `;
 

@@ -3,9 +3,9 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
 
 interface FavoritesContextData {
-  favorites: number[]; // IDs dos cursos favoritados
+  favorites: number[]; 
   toggleFavorite: (courseId: number) => void;
-  favoritesFilter: boolean; // Se true, exibe somente os cursos favoritados
+  favoritesFilter: boolean; 
   toggleFavoritesFilter: () => void;
 }
 

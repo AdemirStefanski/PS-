@@ -17,6 +17,9 @@ import {
   ControlButton,
   VolumeSlider,
   ResponsiveYouTubeWrapper,
+  PriceText,
+  PurchaseButton,
+  DescripContainer,
 } from "./pageStyles";
 import { FiHeart } from "react-icons/fi";
 import { AiFillHeart } from "react-icons/ai";
@@ -50,7 +53,6 @@ const CoursePage = () => {
   const isPurchased = Boolean(purchased);
   const acquiredDate = purchased ? formatDate(purchased.dateJoined) : "";
 
-  // Configuração do vídeo com react-youtube
   const videoRef = useRef<YouTubePlayer | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(50); 
@@ -113,7 +115,6 @@ const CoursePage = () => {
   const { favorites, toggleFavorite } = useFavorites();
   const isFavorited = favorites.includes(course.id);
 
-  // Extrai o videoId do link_curso
   const videoId = getYouTubeVideoId(course.link_curso || "");
 
   return (
@@ -130,38 +131,49 @@ const CoursePage = () => {
         </FavoriteIconContainer>
       </HeaderSection>
 
-      <VideoContainer>
-        {isPurchased ? (
-          videoId ? (
-            <ResponsiveYouTubeWrapper>
-              <YouTube videoId={videoId} opts={opts} onReady={handleVideoReady} />
-            </ResponsiveYouTubeWrapper>
-          ) : (
-            <div style={{ textAlign: "center", padding: "40px", border: "1px solid #ccc" }}>
-              Link do vídeo inválido.
-            </div>
-          )
+      <VideoContainer $purchased={isPurchased}>
+        {isPurchased && videoId ? (
+          <ResponsiveYouTubeWrapper >
+            <YouTube videoId={videoId} opts={opts} onReady={handleVideoReady} />
+          </ResponsiveYouTubeWrapper>
         ) : (
-          <div style={{ textAlign: "center", padding: "40px", border: "1px solid #ccc" }}>
-            Curso não adquirido. Por favor, compre para assistir.
-          </div>
+          <ResponsiveYouTubeWrapper style={{ display: isPurchased ? "block" : "none" }}>
+          </ResponsiveYouTubeWrapper>
         )}
+        <DescripContainer>
+          <div style={{ textAlign: "left", marginTop: "16px" }}>
+            
+              <DescriptionText style={{ fontSize: isPurchased ? "1rem" : "1.2rem" }}>
+                {course.description}
+              </DescriptionText>
+              {!isPurchased && (
+                <>
+                  <div style={{ display: "flex", alignItems: "center", marginTop: "8px" }}>
+                    <InfoLabel>Criado em:</InfoLabel>
+                    <span>{formatDate(course.created_at)}</span>
+                  </div>
 
-        <div style={{ textAlign: "left", marginTop: "16px" }}>
-          <DescriptionText>{course.description}</DescriptionText>
-          <InfoRow>
-            <div>
-              <InfoLabel>Criado em: </InfoLabel>
-              <span>{formatDate(course.created_at)}</span>
-            </div>
-            {isPurchased && (
-              <div>
-                <InfoLabel>Adquirido em: </InfoLabel>
-                <span>{acquiredDate}</span>
-              </div>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "14px" }}>
+                    <PriceText>{`R$ ${Math.floor(course.price)},00`}</PriceText>
+                    <PurchaseButton>Adquirir Curso</PurchaseButton>
+                  </div>
+                </>
             )}
-          </InfoRow>
-        </div>
+            {isPurchased && (
+              <InfoRow>
+                <div>
+                  <InfoLabel>Criado em:</InfoLabel>
+                  <span>{formatDate(course.created_at)}</span>
+                </div>
+                <div>
+                  <InfoLabel>Adquirido em:</InfoLabel>
+                  <span>{acquiredDate}</span>
+                </div>
+              </InfoRow>
+            )}
+            
+          </div>
+        </DescripContainer>  
       </VideoContainer>
 
       {isPurchased && (

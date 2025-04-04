@@ -35,10 +35,10 @@ export const FavoriteIconContainer = styled.div`
   position: relative;
 `;
 
-export const VideoContainer = styled.div`
+export const VideoContainer = styled.div<{ purchased: boolean }>`
   width: 80%;
   max-width: 800px;
-  margin: 0 auto 16px;
+  margin: ${({ $purchased }) => ($purchased ? "0 auto" : "0")};
   position: relative;
   display: flex;
   flex-direction: column;
@@ -49,10 +49,10 @@ export const VideoContainer = styled.div`
 export const ResponsiveYouTubeWrapper = styled.div`
   position: relative;
   width: 100%;
-  max-width: 800px; /* Limite máximo da largura */
+  max-width: 800px; 
   height: 0;
-  padding-bottom: 56.25%; /* 16:9 = 9/16 * 100 = 56.25% */
-  margin: 0 auto; /* Centraliza horizontalmente */
+  padding-bottom: 56.25%; 
+  margin: 0 auto; 
 
   & iframe {
     position: absolute;
@@ -85,6 +85,14 @@ export const InfoRow = styled.div`
 
 export const InfoLabel = styled.span`
   font-weight: 700;
+  margin-right: 4px;
+`;
+
+export const DescripContainer = styled.div`
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  justify-content: flex-start;
 `;
 
 export const ControlsContainer = styled.div`
@@ -113,4 +121,27 @@ export const ControlButton = styled.button`
 
 export const VolumeSlider = styled.input`
   width: 100px;
+`;
+
+export const PriceText = styled.div`
+  font-size: 1.7rem;
+  font-weight: bold;
+  
+  color: #013354;
+`;
+
+export const PurchaseButton = styled.button`
+  padding: 8px 16px;
+  background-color: #013354;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+  &:hover {
+    background-color: #012a45;
+    transform: scale(1.05);
+  }
 `;
