@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import { useParams } from "next/navigation"; 
+import { useParams } from "next/navigation";
+import YouTube, { YouTubeProps, YouTubePlayer } from "react-youtube";
 import {
   PageContainer,
   HeaderSection,
@@ -9,70 +10,95 @@ import {
   CourseTitle,
   FavoriteIconContainer,
   VideoContainer,
-  VideoFrame,
   DescriptionText,
   InfoRow,
   InfoLabel,
   ControlsContainer,
   ControlButton,
   VolumeSlider,
+  ResponsiveYouTubeWrapper,
 } from "./pageStyles";
 import { FiHeart } from "react-icons/fi";
 import { AiFillHeart } from "react-icons/ai";
 import courses from "../../../data/cursos.json";
 import user from "../../../data/user.json";
 import { useFavorites } from "../../../Context/FavoritesContext";
+import Image from "next/image";
 
-// converter data de AAAA-MM-DD para DD/MM/AAAA
+// Função para converter data de AAAA-MM-DD para DD/MM/AAAA
 const formatDate = (dateStr: string) => {
   const [year, month, day] = dateStr.split("-");
   return `${day}/${month}/${year}`;
 };
 
+// Função para extrair o videoId de um link do YouTube
+const getYouTubeVideoId = (url: string): string | null => {
+  const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+  const match = url.match(regExp);
+  return match && match[7].length === 11 ? match[7] : null;
+};
+
 const CoursePage = () => {
-  // Obtenha o courseId dos parâmetros de rota
   const { id } = useParams();
   const courseId = Number(id);
 
   const course = courses.find((c: any) => c.id === courseId);
   if (!course) return <div>Curso não encontrado</div>;
 
-  // Verifica se o usuário adquiriu o curso
+  // Verifica se o curso foi adquirido pelo usuário
   const purchased = user.courses.find((c: any) => c.courseId === courseId);
   const isPurchased = Boolean(purchased);
   const acquiredDate = purchased ? formatDate(purchased.dateJoined) : "";
 
-  // Configuração do vídeo
-  const videoRef = useRef<HTMLVideoElement>(null);
+  // Configuração do vídeo com react-youtube
+  const videoRef = useRef<YouTubePlayer | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [volume, setVolume] = useState(1);
+  const [volume, setVolume] = useState(50); 
   const [playbackRate, setPlaybackRate] = useState(1);
+
+  const opts: YouTubeProps["opts"] = {
+    width: "100%",
+    height: "100%",
+    playerVars: {
+      autoplay: 0,
+      modestbranding: 1,
+      controls: 0, 
+      rel: 0, 
+      showinfo: 0,
+    },
+  };
+
+  const handleVideoReady: YouTubeProps["onReady"] = (event) => {
+    videoRef.current = event.target;
+    event.target.setVolume(volume);
+    event.target.setPlaybackRate(playbackRate);
+  };
 
   const handlePlayPause = () => {
     if (!videoRef.current) return;
     if (isPlaying) {
-      videoRef.current.pause();
+      videoRef.current.pauseVideo();
     } else {
-      videoRef.current.play();
+      videoRef.current.playVideo();
     }
     setIsPlaying(!isPlaying);
   };
 
   const handleRestart = () => {
     if (videoRef.current) {
-      videoRef.current.currentTime = 0;
+      videoRef.current.seekTo(0);
       if (!isPlaying) {
-        videoRef.current.play();
+        videoRef.current.playVideo();
         setIsPlaying(true);
       }
     }
   };
 
   const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newVol = parseFloat(e.target.value);
+    const newVol = parseInt(e.target.value);
     setVolume(newVol);
     if (videoRef.current) {
-      videoRef.current.volume = newVol;
+      videoRef.current.setVolume(newVol);
     }
   };
 
@@ -80,12 +106,15 @@ const CoursePage = () => {
     const newSpeed = playbackRate + delta;
     setPlaybackRate(newSpeed);
     if (videoRef.current) {
-      videoRef.current.playbackRate = newSpeed;
+      videoRef.current.setPlaybackRate(newSpeed);
     }
   };
 
   const { favorites, toggleFavorite } = useFavorites();
   const isFavorited = favorites.includes(course.id);
+
+  // Extrai o videoId do link_curso
+  const videoId = getYouTubeVideoId(course.link_curso || "");
 
   return (
     <PageContainer>
@@ -103,54 +132,102 @@ const CoursePage = () => {
 
       <VideoContainer>
         {isPurchased ? (
-          <VideoFrame
-            ref={videoRef}
-            controls={false}
-            src={course.link_curso}
-          />
+          videoId ? (
+            <ResponsiveYouTubeWrapper>
+              <YouTube videoId={videoId} opts={opts} onReady={handleVideoReady} />
+            </ResponsiveYouTubeWrapper>
+          ) : (
+            <div style={{ textAlign: "center", padding: "40px", border: "1px solid #ccc" }}>
+              Link do vídeo inválido.
+            </div>
+          )
         ) : (
           <div style={{ textAlign: "center", padding: "40px", border: "1px solid #ccc" }}>
             Curso não adquirido. Por favor, compre para assistir.
           </div>
         )}
-      </VideoContainer>
 
-      <DescriptionText>{course.description}</DescriptionText>
-
-      <InfoRow>
-        <div>
-          <InfoLabel>Criado em: </InfoLabel>
-          <span>{formatDate(course.created_at)}</span>
+        <div style={{ textAlign: "left", marginTop: "16px" }}>
+          <DescriptionText>{course.description}</DescriptionText>
+          <InfoRow>
+            <div>
+              <InfoLabel>Criado em: </InfoLabel>
+              <span>{formatDate(course.created_at)}</span>
+            </div>
+            {isPurchased && (
+              <div>
+                <InfoLabel>Adquirido em: </InfoLabel>
+                <span>{acquiredDate}</span>
+              </div>
+            )}
+          </InfoRow>
         </div>
-        {isPurchased && (
-          <div>
-            <InfoLabel>Adquirido em: </InfoLabel>
-            <span>{acquiredDate}</span>
-          </div>
-        )}
-      </InfoRow>
+      </VideoContainer>
 
       {isPurchased && (
         <ControlsContainer>
+
           <ControlButton onClick={handlePlayPause}>
-            {isPlaying ? "Pause" : "Play"}
+            {isPlaying ? (
+              <Image
+                src="/videocontrols/pause.png"
+                alt="Pause"
+                width={24}
+                height={24}
+              />
+            ) : (
+              <Image
+                src="/videocontrols/play.png"
+                alt="Play"
+                width={24}
+                height={24}
+              />
+            )}
           </ControlButton>
-          <ControlButton onClick={handleRestart}>Reiniciar</ControlButton>
-          <div>
-            <label style={{ marginRight: "8px" }}>Volume:</label>
+
+          <ControlButton onClick={handleRestart}>
+            <Image
+              src="/videocontrols/restartVideo.png"
+              alt="Reiniciar Vídeo"
+              width={24}
+              height={24}
+            />
+          </ControlButton>
+
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <Image
+              src="/videocontrols/sound.png"
+              alt="Volume"
+              width={24}
+              height={24}
+            />
             <VolumeSlider
               type="range"
               min="0"
-              max="1"
-              step="0.01"
+              max="100"
+              step="1"
               value={volume}
               onChange={handleVolumeChange}
             />
           </div>
-          <div>
-            <ControlButton onClick={() => changeSpeed(0.25)}>Aumentar Vel.</ControlButton>
-            <ControlButton onClick={() => changeSpeed(-0.25)}>Diminuir Vel.</ControlButton>
-          </div>
+
+          <ControlButton onClick={() => changeSpeed(-0.25)}>
+            <Image
+              src="/videocontrols/speedDown.png"
+              alt="Diminuir Velocidade"
+              width={24}
+              height={24}
+            />
+          </ControlButton>
+
+          <ControlButton onClick={() => changeSpeed(0.25)}>
+            <Image
+              src="/videocontrols/speedUp.png"
+              alt="Aumentar Velocidade"
+              width={24}
+              height={24}
+            />
+          </ControlButton>
         </ControlsContainer>
       )}
     </PageContainer>

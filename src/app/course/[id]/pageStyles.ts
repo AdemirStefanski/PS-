@@ -3,7 +3,10 @@ import styled from "styled-components";
 export const PageContainer = styled.div`
   padding: 16px;
   color: #013354;
+  max-width: 1440px;
+  margin: 0 auto;
   font-family: 'Roboto', sans-serif;
+  margin-top:80px;
 `;
 
 export const HeaderSection = styled.div`
@@ -37,8 +40,27 @@ export const VideoContainer = styled.div`
   max-width: 800px;
   margin: 0 auto 16px;
   position: relative;
-  /* Se desejar manter a proporção 16:9 */
-  padding-top: 56.25%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const ResponsiveYouTubeWrapper = styled.div`
+  position: relative;
+  width: 100%;
+  max-width: 800px; /* Limite máximo da largura */
+  height: 0;
+  padding-bottom: 56.25%; /* 16:9 = 9/16 * 100 = 56.25% */
+  margin: 0 auto; /* Centraliza horizontalmente */
+
+  & iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+  }
 `;
 
 export const VideoFrame = styled.video`
@@ -76,7 +98,7 @@ export const ControlsContainer = styled.div`
 
 export const ControlButton = styled.button`
   padding: 8px 12px;
-  background-color: #013354;
+  background-color: transparent !important;
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -84,8 +106,9 @@ export const ControlButton = styled.button`
   font-size: 1rem;
   transition: background-color 0.2s;
   &:hover {
-    background-color: #012a45;
+    transform: scale(1.1);
   }
+  
 `;
 
 export const VolumeSlider = styled.input`
